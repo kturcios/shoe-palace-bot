@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Download</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      #root {
+        height: 100vh;
+        display: flex;
+        padding: 10px 10px 10px 10px;
+        font-family: Roboto, sans-serif;
+      }
+      #left {
+        flex-grow: 1;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #right {
+        flex-grow: 3;
+        height: 100%;
+        display: flex;
+        margin-top: 15px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+      }
+      img {
+        margin-bottom: 10px;
+      }
+      h5 {
+        margin-bottom: 5px;
+      }
+      progress {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      #cancelButton {
+        align-self: flex-end;
+        background-color: white;
+        border-color: lightgray;
+        border-radius: 3px;
+        height: 25px;
+        width: 75px;
+      }
+      #relaunchButton {
+        display: none;
+        align-self: flex-end;
+        color: white;
+        background-color: #3492ED;
+        border-color: #3492ED;
+        border-radius: 3px;
+        height: 25px;
+        width: 150px;
+      }
+    </style>
+  </head>
+  <body style="-webkit-app-region: drag">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div id="left">
+        <img src="../assets/logo512.png" height=60 width=60>
+      </div>
+      <div id="right">
+        <h5>Downloading</h5>
+        <progress id="progressbar" max="100" value="0"></progress>
+        <button id="cancelButton" onclick="cancelDownload()">
+          Cancel
+        </button>
+        <button id="relaunchButton" onclick="installAndRelaunch()">
+          Install and Relaunch
+        </button>
+      </div>
+    </div>
+    <script>
+      // Updates the progress bar as the download is in progress
+      window.ipcRenderer.on('download-progress', (event, progressObj) => {
+        console.log('Receieved download progress event');
+        const { total, transferred } = progressObj;
+        document.getElementById('progressbar').max = total;
+        document.getElementById('progressbar').value = transferred;
+      });
+      // Once the download is complete, change the "Cancel" button to "Install and Relaunch"
+      window.ipcRenderer.on('update-downloaded', () => {
+        document.getElementById('cancelButton').style.display = 'none';
+        document.getElementById('relaunchButton').style.display = 'block';
+      });
+      // Signal main process to close the download window
+      function cancelDownload() {
+        window.ipcRenderer.send('cancel-download');
+      }
+      // Signal main process to install and restart the app
+      function installAndRelaunch() {
+        window.ipcRenderer.send('install-and-relaunch');
+      }
+    </script>
+  </body>
+</html>
