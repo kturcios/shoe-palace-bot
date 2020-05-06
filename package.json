@@ -40,7 +40,7 @@
       "node_modules/**/*"
     ],
     "mac": {
-      "icon": "./public/assets/mstr.icns",
+      "icon": "./public/mstr.icns",
       "category": "public.app-category.utilities",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
