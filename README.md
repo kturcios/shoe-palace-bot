@@ -1,5 +1,4 @@
-# Electron React Boilerplate
-
+# Shoe Palace Bot
 This Electron project is bootstrapped with create-react-app.
 
 It has also been configured with some additional tools and features:
