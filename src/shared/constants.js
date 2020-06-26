@@ -7,4 +7,4 @@ const createConstant = (name, value) => {
 };
 
 createConstant('APP_INFO', 'app_info');
-createConstant('ORDER_SHOES', 'order-shoes');
+createConstant('PROCESS_ORDER', 'process-order');
