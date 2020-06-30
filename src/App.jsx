@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 160,
+    width: '100%',
   },
 }));
 
@@ -135,7 +136,6 @@ export default function Dashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
     <div className={classes.root}>
@@ -184,29 +184,124 @@ export default function Dashboard() {
             spacing={3}
             direction="column"
           >
-            <Grid item xs={12} alignI>
-              <Container>
+            <Grid
+              item
+              xs={12}
+              container
+              alignItems="center"
+            >
+              <Grid item xs={8}>
                 <FormControl className={classes.formControl}>
                   <InputLabel>Billing Profile</InputLabel>
                   <Select>
                     <MenuItem value="1">Kevin</MenuItem>
                   </Select>
                 </FormControl>
-              </Container>
-              <Container>
+              </Grid>
+              <Grid item xs={2} />
+              <Grid item xs={2}>
                 <Button
                   variant="contained"
+                  fullWidth
                 >
                   NEW
                 </Button>
-              </Container>
+              </Grid>
             </Grid>
             <Grid
               item
               xs={12}
               container
+              spacing={3}
+              justifyContent="center"
             >
-              CONTENT
+              <Grid
+                item
+                xs={12}
+                container
+                direction="column"
+              >
+                <Typography
+                  variant="h4"
+                >
+                  Personal Information
+                </Typography>
+                <TextField
+                  label="First Name"
+                />
+                <TextField
+                  label="Last Name"
+                />
+                <TextField
+                  label="Phone Number"
+                />
+                <TextField
+                  label="Email"
+                />
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                container
+                direction="column"
+              >
+                <Typography
+                  variant="h4"
+                >
+                  Billing Info
+                </Typography>
+                <TextField
+                  label="Country"
+                />
+                <TextField
+                  label="Street"
+                />
+                <TextField
+                  label="City"
+                />
+                <TextField
+                  label="State"
+                />
+                <TextField
+                  label="Zip Code"
+                />
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                container
+                direction="column"
+              >
+                <Typography
+                  variant="h4"
+                >
+                  Credit Card Info
+                </Typography>
+                <TextField
+                  label="Credit Card Type"
+                />
+                <TextField
+                  label="Credit Card Number"
+                />
+                <TextField
+                  label="Expiration Month"
+                />
+                <TextField
+                  label="Expiration Year"
+                />
+                <TextField
+                  label="CCV (Security Code)"
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              container
+              direction="row-reverse"
+            >
+              <Button>DELETE</Button>
+              <Button>SAVE</Button>
             </Grid>
           </Grid>
         </Container>
