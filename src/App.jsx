@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   TextField,
   FormControl,
@@ -6,230 +8,209 @@ import {
   MenuItem,
   InputLabel,
   Button,
+  Drawer,
+  CssBaseline,
+  Box,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  Badge,
+  Container,
+  Grid,
+  Paper,
+  Link,
 } from '@material-ui/core';
-import { PROCESS_ORDER } from './shared/constants';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import mainListItems from './ListItems';
 
-const { ipcRenderer, logger } = window;
-
-function App() {
-  const [orderInfo, setOrderInfo] = useState({
-    phoneNumber: '',
-    url: '',
-    size: '',
-    quantity: '',
-    firstname: '',
-    lastname: '',
-    street: '',
-    city: '',
-    zip: '',
-    ccType: '',
-    cc: '',
-    expYear: '',
-    expMonth: '',
-    ccv: '',
-    email: '',
-  });
-
-  const handleChange = (field) => (event) => {
-    setOrderInfo({
-      ...orderInfo,
-      [field]: event.target.value,
-    });
-  };
-
-  const handleStart = async () => {
-    try {
-      await ipcRenderer.invoke(PROCESS_ORDER, orderInfo);
-    } catch (err) {
-      logger.error(`Order failed: ${err}`);
-      alert(`Order failed: ${err}`);
-    }
-  };
-
+function Copyright() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <TextField
-        id="phone-number"
-        label="Phone number"
-        value={orderInfo.phoneNumber}
-        onChange={handleChange('phoneNumber')}
-      />
-      <TextField
-        id="email"
-        label="Email"
-        value={orderInfo.email}
-        onChange={handleChange('email')}
-      />
-      <TextField
-        id="shoe-url"
-        label="Shoe URL"
-        value={orderInfo.url}
-        onChange={handleChange('url')}
-      />
-      <TextField
-        id="shoe-size"
-        label="Shoe size"
-        value={orderInfo.size}
-        onChange={handleChange('size')}
-      />
-      <TextField
-        id="shoe-quantity"
-        label="Quantity"
-        value={orderInfo.quantity}
-        onChange={handleChange('quantity')}
-      />
-      <TextField
-        id="firstname"
-        label="First name"
-        value={orderInfo.firstname}
-        onChange={handleChange('firstname')}
-      />
-      <TextField
-        id="lastname"
-        label="Last name"
-        value={orderInfo.lastname}
-        onChange={handleChange('lastname')}
-      />
-      <TextField
-        id="street-address"
-        label="Street address"
-        value={orderInfo.street}
-        onChange={handleChange('street')}
-      />
-      <TextField
-        id="city"
-        label="City"
-        value={orderInfo.city}
-        onChange={handleChange('city')}
-      />
-      <FormControl>
-        <InputLabel id="demo-simple-select-label">State</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={orderInfo.state}
-          onChange={handleChange('state')}
-          style={{
-            width: 165,
-          }}
-        >
-          <MenuItem value="1">Alabama</MenuItem>
-          <MenuItem value="2">Alaska</MenuItem>
-          <MenuItem value="4">Arizona</MenuItem>
-          <MenuItem value="5">Arkansas</MenuItem>
-          <MenuItem value="12">California</MenuItem>
-          <MenuItem value="13">Colorado</MenuItem>
-          <MenuItem value="14">Connecticut</MenuItem>
-          <MenuItem value="15">Delaware</MenuItem>
-          <MenuItem value="16">District of Columbia</MenuItem>
-          <MenuItem value="18">Florida</MenuItem>
-          <MenuItem value="19">Georgia</MenuItem>
-          <MenuItem value="21">Hawaii</MenuItem>
-          <MenuItem value="22">Idaho</MenuItem>
-          <MenuItem value="23">Illinois</MenuItem>
-          <MenuItem value="24">Indiana</MenuItem>
-          <MenuItem value="25">Iowa</MenuItem>
-          <MenuItem value="26">Kansas</MenuItem>
-          <MenuItem value="27">Kentucky</MenuItem>
-          <MenuItem value="28">Louisiana</MenuItem>
-          <MenuItem value="29">Maine</MenuItem>
-          <MenuItem value="31">Maryland</MenuItem>
-          <MenuItem value="32">Massachusetts</MenuItem>
-          <MenuItem value="33">Michigan</MenuItem>
-          <MenuItem value="34">Minnesota</MenuItem>
-          <MenuItem value="35">Mississippi</MenuItem>
-          <MenuItem value="36">Missouri</MenuItem>
-          <MenuItem value="37">Montana</MenuItem>
-          <MenuItem value="38">Nebraska</MenuItem>
-          <MenuItem value="39">Nevada</MenuItem>
-          <MenuItem value="40">New Hampshire</MenuItem>
-          <MenuItem value="41">New Jersey</MenuItem>
-          <MenuItem value="42">New Mexico</MenuItem>
-          <MenuItem value="43">New York</MenuItem>
-          <MenuItem value="44">North Carolina</MenuItem>
-          <MenuItem value="45">North Dakota</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        id="zip-code"
-        label="Zip code"
-        value={orderInfo.zip}
-        onChange={handleChange('zip')}
-      />
-      <FormControl>
-        <InputLabel>Credit Card type</InputLabel>
-        <Select
-          value={orderInfo.state}
-          onChange={handleChange('ccType')}
-          style={{
-            width: 165,
-          }}
-        >
-          <MenuItem value="AE">American Express</MenuItem>
-          <MenuItem value="VI">Visa</MenuItem>
-          <MenuItem value="MC">MasterCard</MenuItem>
-          <MenuItem value="DI">Discover</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        id="credit-card-number"
-        label="Credit card number"
-        value={orderInfo.cc}
-        onChange={handleChange('cc')}
-      />
-      <FormControl>
-        <InputLabel>Expiration month</InputLabel>
-        <Select
-          value={orderInfo.state}
-          onChange={handleChange('expMonth')}
-          style={{
-            width: 165,
-          }}
-        >
-          <MenuItem value="1">1 - Jan</MenuItem>
-          <MenuItem value="2">2 - Feb</MenuItem>
-          <MenuItem value="3">3 - Mar</MenuItem>
-          <MenuItem value="4">4 - Apr</MenuItem>
-          <MenuItem value="5">5 - May</MenuItem>
-          <MenuItem value="6">6 - Jun</MenuItem>
-          <MenuItem value="7">7 - Jul</MenuItem>
-          <MenuItem value="8">8 - Aug</MenuItem>
-          <MenuItem value="9">9 - Sep</MenuItem>
-          <MenuItem value="10">10 - Oct</MenuItem>
-          <MenuItem value="11">11 - Nov</MenuItem>
-          <MenuItem value="12">12 - Dec</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        id="expiration-year"
-        label="Expiration year"
-        value={orderInfo.expYear}
-        onChange={handleChange('expYear')}
-      />
-      <TextField
-        id="security-code"
-        label="Security code (CCV)"
-        value={orderInfo.ccv}
-        onChange={handleChange('ccv')}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          marginTop: 10,
-        }}
-        onClick={handleStart}
-      >
-        Start
-      </Button>
-    </div>
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   );
 }
 
-export default App;
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  toolbarIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  menuButtonHidden: {
+    display: 'none',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  drawerPaper: {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9),
+    },
+  },
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 240,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 160,
+  },
+}));
+
+export default function Dashboard() {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(true);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            Hands.IO
+          </Typography>
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        }}
+        open={open}
+      >
+        <div className={classes.toolbarIcon}>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>{mainListItems}</List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth="lg" className={classes.container}>
+          <Grid
+            container
+            spacing={3}
+            direction="column"
+          >
+            <Grid item xs={12} alignI>
+              <Container>
+                <FormControl className={classes.formControl}>
+                  <InputLabel>Billing Profile</InputLabel>
+                  <Select>
+                    <MenuItem value="1">Kevin</MenuItem>
+                  </Select>
+                </FormControl>
+              </Container>
+              <Container>
+                <Button
+                  variant="contained"
+                >
+                  NEW
+                </Button>
+              </Container>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              container
+            >
+              CONTENT
+            </Grid>
+          </Grid>
+        </Container>
+      </main>
+    </div>
+  );
+}
