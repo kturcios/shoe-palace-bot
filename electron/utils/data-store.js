@@ -1,22 +1,28 @@
 const storage = require('node-persist');
 const { v4: uuidv4 } = require('uuid');
-const { BILLING_PROFILE } = require('../../src/shared/constants');
+const { BILLING_PROFILES } = require('../../src/shared/constants');
 
-const listBillingProfiles = async () => await storage.getItem(BILLING_PROFILE) || [];
+const listBillingProfiles = async () => await storage.getItem(BILLING_PROFILES) || [];
 
 const deleteBillingProfileByIndex = async (index) => {
-  const bProfilesList = await storage.getItem(BILLING_PROFILE) || [];
+  const bProfilesList = await storage.getItem(BILLING_PROFILES) || [];
   const updatedList = bProfilesList.filter((bProfile, i) => i !== index);
-  await storage.setItem(BILLING_PROFILE, updatedList);
+  await storage.setItem(BILLING_PROFILES, updatedList);
 };
 
 const createBillingProfile = async (billingProfile) => {
-  const bProfilesList = await storage.getItem(BILLING_PROFILE) || [];
+  const bProfilesList = await storage.getItem(BILLING_PROFILES) || [];
   bProfilesList.push({
     id: uuidv4(),
     ...billingProfile,
   });
-  await storage.setItem(BILLING_PROFILE, bProfilesList);
+  await storage.setItem(BILLING_PROFILES, bProfilesList);
+};
+
+const updateBillingProfileByIndex = async (updatedBillingProfile, index) => {
+  const bProfilesList = await storage.getItem(BILLING_PROFILES) || [];
+  bProfilesList[index] = updatedBillingProfile;
+  await storage.setItem(BILLING_PROFILES, bProfilesList);
 };
 
 const init = async (storageDir) => {
@@ -30,5 +36,5 @@ module.exports = {
   listBillingProfiles,
   createBillingProfile,
   deleteBillingProfileByIndex,
-  default: init,
+  updateBillingProfileByIndex,
 };

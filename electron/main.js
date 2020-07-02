@@ -36,8 +36,10 @@ const loadMainProcesses = () => {
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1060,
+    height: 850,
+    minHeight: 850,
+    minWidth: 1060,
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
     },
