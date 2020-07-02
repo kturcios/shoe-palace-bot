@@ -8,3 +8,6 @@ const createConstant = (name, value) => {
 
 createConstant('APP_INFO', 'app_info');
 createConstant('PROCESS_ORDER', 'process-order');
+
+// Database keys
+createConstant('BILLING_PROFILES', 'billingProfiles');
