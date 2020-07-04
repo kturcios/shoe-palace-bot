@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import BillingProfileFormContextProvider from './BillingProfileFormContext';
+import BillingProfileFormContextProvider from './contexts/BillingProfileFormContext';
+import MainMenuContextProvider from './contexts/MainMenuContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BillingProfileFormContextProvider>
-      <App />
-    </BillingProfileFormContextProvider>
+    <MainMenuContextProvider>
+      <BillingProfileFormContextProvider>
+        <App />
+      </BillingProfileFormContextProvider>
+    </MainMenuContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

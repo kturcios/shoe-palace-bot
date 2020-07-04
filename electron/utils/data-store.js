@@ -6,7 +6,9 @@ const listBillingProfiles = async () => await storage.getItem(BILLING_PROFILES) 
 
 const deleteBillingProfileByIndex = async (index) => {
   const bProfilesList = await storage.getItem(BILLING_PROFILES) || [];
+  console.log('BEFORE: ', bProfilesList);
   const updatedList = bProfilesList.filter((bProfile, i) => i !== index);
+  console.log('AFTER: ', updatedList);
   await storage.setItem(BILLING_PROFILES, updatedList);
 };
 

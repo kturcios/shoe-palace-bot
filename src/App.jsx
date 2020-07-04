@@ -22,11 +22,13 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 // eslint-disable-next-line import/no-named-as-default
-import mainListItems from './ListItems';
-import { useBillingProfileFormState, useBillingProfileDispatch } from './BillingProfileFormContext';
+import MainListItems from './ListItems';
+import { useBillingProfileFormState, useBillingProfileDispatch } from './contexts/BillingProfileFormContext';
+import { useMainMenuState } from './contexts/MainMenuContext';
 import {
   LIST_BILLING_PROFILES,
   UPDATE_BILLING_PROFILE,
+  DELETE_BILLING_PROFILE,
 } from './shared/constants';
 
 const { ipcRenderer, logger } = window;
@@ -121,7 +123,7 @@ export default function App() {
   const classes = useStyles();
   const dispatch = useBillingProfileDispatch();
   const [bProfilesList, setBProfilesList] = useState([]);
-  const { billingProfile, isNew } = useBillingProfileFormState();
+  const { billingProfile, isNew, selectedProfileIndex } = useBillingProfileFormState();
   const {
     firstname,
     lastname,
@@ -139,7 +141,7 @@ export default function App() {
     expYear,
   } = billingProfile;
   const [open, setOpen] = useState(true);
-  const [selectedProfile, setSelectedProfile] = useState(null);
+  // const [selectedProfile, setSelectedProfile] = useState(null);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -147,7 +149,11 @@ export default function App() {
     setOpen(false);
   };
   const handleProfileSelect = (event) => {
-    setSelectedProfile(event.target.value);
+    dispatch({
+      type: 'UPDATE_SELECTED_BILLING_PROFILE',
+      selectedProfileIndex: event.target.value,
+    });
+    // setSelectedProfile(event.target.value);
     logger.info('selected profile index: ', event.target.value);
     logger.info(bProfilesList[event.target.value]);
     dispatch({
@@ -162,13 +168,6 @@ export default function App() {
       value: event.target.value,
     });
   };
-  const handleBillingProfileUpdate = async () => {
-    try {
-      await ipcRenderer.invoke(UPDATE_BILLING_PROFILE, billingProfile);
-    } catch (err) {
-      logger.error(err);
-    }
-  };
   const fetchBillingProfiles = async () => {
     try {
       setBProfilesList(await ipcRenderer.invoke(LIST_BILLING_PROFILES));
@@ -176,16 +175,44 @@ export default function App() {
       logger.error(err);
     }
   };
+  const handleBillingProfileUpdate = async () => {
+    if (isNew) {
+      dispatch({
+        type: 'UPDATE_BILLING_PROFILE',
+      });
+    }
+    try {
+      await ipcRenderer.invoke(UPDATE_BILLING_PROFILE, isNew, billingProfile);
+      fetchBillingProfiles();
+    } catch (err) {
+      logger.error(err);
+    }
+  };
   const handleCreateNewBillingProfile = async () => {
-    // dispatch({ type: })
+    dispatch({ type: 'CREATE' });
+  };
+  const handleCancelOrDelete = async () => {
+    if (isNew) {
+      dispatch({ type: 'CANCEL' });
+      return;
+    }
+    try {
+      dispatch({ type: 'DELETE' });
+      await ipcRenderer.invoke(DELETE_BILLING_PROFILE, selectedProfileIndex);
+      fetchBillingProfiles();
+    } catch (err) {
+      logger.error(err);
+      // TODO: handle delete error
+    }
   };
 
   useEffect(() => {
     fetchBillingProfiles();
   }, []);
+
   useEffect(() => {
-    logger.info('BILLING PROFILE', billingProfile);
-  }, [billingProfile]);
+    fetchBillingProfiles();
+  }, [isNew]);
 
   return (
     <div className={classes.root}>
@@ -219,7 +246,9 @@ export default function App() {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <MainListItems />
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -236,10 +265,13 @@ export default function App() {
               alignItems="center"
             >
               <Grid item xs={8}>
-                <FormControl className={classes.formControl}>
+                <FormControl
+                  className={classes.formControl}
+                  disabled={isNew}
+                >
                   <InputLabel>Billing Profile</InputLabel>
                   <Select
-                    value={selectedProfile}
+                    value={selectedProfileIndex}
                     onChange={handleProfileSelect}
                   >
                     {bProfilesList.map((bp, index) => <MenuItem value={index}>{bp.firstname}</MenuItem>)}
@@ -264,7 +296,7 @@ export default function App() {
               spacing={3}
               justifyContent="center"
             >
-              {selectedProfile !== null && (
+              {(selectedProfileIndex !== null || isNew) && (
                 <>
                   <Grid
                     item
@@ -273,7 +305,7 @@ export default function App() {
                     direction="column"
                   >
                     <Typography
-                      variant="h4"
+                      variant="h5"
                     >
                       Personal Info
                     </Typography>
@@ -305,7 +337,7 @@ export default function App() {
                     direction="column"
                   >
                     <Typography
-                      variant="h4"
+                      variant="h5"
                     >
                       Billing Info
                     </Typography>
@@ -400,7 +432,7 @@ export default function App() {
                     direction="column"
                   >
                     <Typography
-                      variant="h4"
+                      variant="h5"
                     >
                       Credit Card Info
                     </Typography>
@@ -461,7 +493,7 @@ export default function App() {
               container
               direction="row-reverse"
             >
-              {selectedProfile !== null && (
+              {(selectedProfileIndex !== null || isNew) && (
                 <>
                   <Button
                     variant="contained"
@@ -473,8 +505,9 @@ export default function App() {
                   &nbsp;
                   <Button
                     variant="contained"
+                    onClick={handleCancelOrDelete}
                   >
-                    DELETE
+                    {isNew ? 'CANCEL' : 'DELETE'}
                   </Button>
                 </>
               )}
