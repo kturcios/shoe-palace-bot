@@ -1,10 +1,11 @@
+/* eslint-disable no-fallthrough */
 /* eslint-disable no-param-reassign */
 import React, { createContext, useContext } from 'react';
 import { useImmerReducer } from 'use-immer';
 
 const { logger } = window;
 
-// Update reducer to use init to reset state
+// TODO: Update reducer to use init to reset state
 const init = () => ({
   billingProfile: {
     firstname: '',
@@ -51,7 +52,7 @@ function reducer(draft, action) {
   switch (action.type) {
     case 'SAVE': {
       draft.isNew = false;
-      return;
+      break;
     }
     case 'UPDATE_BILLING_PROFILE': {
       draft.selectedProfileIndex = null;
@@ -71,20 +72,20 @@ function reducer(draft, action) {
         expMonth: '',
         expYear: '',
       };
-      return;
+      break;
     }
     case 'switch-billing-profile': {
       logger.info('SWITCHED TO: ', action.billingProfile);
       draft.billingProfile = action.billingProfile;
-      return;
+      break;
     }
     case 'PROFILE_FIELD_UPDATE': {
       draft.billingProfile[action.field] = action.value;
-      return;
+      break;
     }
     case 'UPDATE_SELECTED_BILLING_PROFILE': {
       draft.selectedProfileIndex = action.selectedProfileIndex;
-      return;
+      break;
     }
     case 'DELETE': {
       draft.isNew = false;
@@ -104,7 +105,7 @@ function reducer(draft, action) {
         expMonth: '',
         expYear: '',
       };
-      return;
+      break;
     }
     case 'CREATE': {
       draft.selectedProfileIndex = null;
@@ -124,7 +125,7 @@ function reducer(draft, action) {
         expMonth: '',
         expYear: '',
       };
-      return;
+      break;
     }
     case 'CANCEL': {
       draft.isNew = false;
@@ -150,32 +151,32 @@ function reducer(draft, action) {
   }
 }
 
-const BillingProfileFormStateContext = createContext();
-const BillingProfileFormDispatchContext = createContext();
+const BillingProfilesStateContext = createContext();
+const BillingProfilesDispatchContext = createContext();
 
-export default function BillingProfileFormContextProvider({ children }) {
+export default function BillingProfilesContextProvider({ children }) {
   const [state, dispatch] = useImmerReducer(reducer, initialState);
   return (
-    <BillingProfileFormDispatchContext.Provider value={dispatch}>
-      <BillingProfileFormStateContext.Provider value={state}>
+    <BillingProfilesDispatchContext.Provider value={dispatch}>
+      <BillingProfilesStateContext.Provider value={state}>
         {children}
-      </BillingProfileFormStateContext.Provider>
-    </BillingProfileFormDispatchContext.Provider>
+      </BillingProfilesStateContext.Provider>
+    </BillingProfilesDispatchContext.Provider>
   );
 }
 
-export function useBillingProfileFormState() {
-  const state = useContext(BillingProfileFormStateContext);
+export function useBillingProfilesState() {
+  const state = useContext(BillingProfilesStateContext);
   if (state === undefined) {
-    throw new Error('Billing form state context must be used within a ContextProvider');
+    throw new Error('Billing profiles state context must be used within a ContextProvider');
   }
   return state;
 }
 
-export function useBillingProfileDispatch() {
-  const dispatch = useContext(BillingProfileFormDispatchContext);
+export function useBillingProfilesDispatch() {
+  const dispatch = useContext(BillingProfilesDispatchContext);
   if (dispatch === undefined) {
-    throw new Error('Billing form dispatch context must be used within a ContextProvider');
+    throw new Error('Billing profiles dispatch context must be used within a ContextProvider');
   }
   return dispatch;
 }

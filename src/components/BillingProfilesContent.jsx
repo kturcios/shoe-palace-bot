@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TextField,
   FormControl,
@@ -10,7 +10,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useBillingProfileFormState, useBillingProfileDispatch } from '../contexts/BillingProfileFormContext';
+import { useBillingProfilesState, useBillingProfilesDispatch } from '../contexts/BillingProfilesContext';
 import {
   LIST_BILLING_PROFILES,
   UPDATE_BILLING_PROFILE,
@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
 export default function BillingProfileMenuContent() {
   const [bProfilesList, setBProfilesList] = useState([]);
   const classes = useStyles();
-  const dispatch = useBillingProfileDispatch();
-  const { billingProfile, isNew, selectedProfileIndex } = useBillingProfileFormState();
+  const dispatch = useBillingProfilesDispatch();
+  const { billingProfile, isNew, selectedProfileIndex } = useBillingProfilesState();
   const {
     firstname,
     lastname,
@@ -48,6 +48,16 @@ export default function BillingProfileMenuContent() {
     expMonth,
     expYear,
   } = billingProfile;
+  const fetchBillingProfiles = async () => {
+    try {
+      setBProfilesList(await ipcRenderer.invoke(LIST_BILLING_PROFILES));
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  useEffect(() => {
+    fetchBillingProfiles();
+  }, [isNew]);
   const handleProfileSelect = (event) => {
     dispatch({
       type: 'UPDATE_SELECTED_BILLING_PROFILE',
@@ -63,13 +73,6 @@ export default function BillingProfileMenuContent() {
   };
   const handleCreateNewBillingProfile = async () => {
     dispatch({ type: 'CREATE' });
-  };
-  const fetchBillingProfiles = async () => {
-    try {
-      setBProfilesList(await ipcRenderer.invoke(LIST_BILLING_PROFILES));
-    } catch (err) {
-      logger.error(err);
-    }
   };
   const handleBillingProfileUpdate = async () => {
     if (isNew) {

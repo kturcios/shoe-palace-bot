@@ -10,7 +10,6 @@ const {
 let initialized = false;
 // const dataDir = app.getPath('appData');
 const dataDir = '/Users/kturcios/GitHub/shoe-palace-bot';
-console.log({ dataDir });
 
 ipcMain.handle(UPDATE_BILLING_PROFILE, async (event, isNew, billingProfile) => {
   logger.info('update profile: ', billingProfile);
