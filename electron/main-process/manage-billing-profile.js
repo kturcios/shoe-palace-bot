@@ -9,11 +9,9 @@ const {
 
 let initialized = false;
 // const dataDir = app.getPath('appData');
-const dataDir = '/Users/kturcios/GitHub/shoe-palace-bot';
+const dataDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/billing-profiles';
 
 ipcMain.handle(UPDATE_BILLING_PROFILE, async (event, isNew, billingProfile) => {
-  logger.info('update profile: ', billingProfile);
-  logger.info({ isNew });
   if (!initialized) {
     await storage.init(dataDir);
     initialized = true;

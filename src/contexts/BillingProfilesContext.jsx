@@ -25,6 +25,7 @@ const init = () => ({
   },
   isNew: false,
   selectedProfileIndex: null,
+  billingProfiles: [],
 });
 
 const initialState = {
@@ -52,6 +53,10 @@ function reducer(draft, action) {
   switch (action.type) {
     case 'SAVE': {
       draft.isNew = false;
+      break;
+    }
+    case 'UPDATE_BILLING_PROFILES_LIST': {
+      draft.billingProfiles = action.billingProfiles;
       break;
     }
     case 'UPDATE_BILLING_PROFILE': {
@@ -147,7 +152,7 @@ function reducer(draft, action) {
       draft.selectedProfileIndex = null;
     }
     default:
-      return;
+      break;
   }
 }
 

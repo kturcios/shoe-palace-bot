@@ -6,16 +6,17 @@ import {
   MenuItem,
   InputLabel,
   Button,
-  Typography,
   Grid,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useBillingProfilesState } from '../contexts/BillingProfilesContext';
 import { useTasksState, useTasksDispatch } from '../contexts/TasksContext';
 import {
   LIST_TASKS,
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
+  EXECUTE_TASK,
 } from '../shared/constants';
 
 const { ipcRenderer, logger } = window;
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TaskMenuContent() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
+  const { billingProfiles } = useBillingProfilesState();
   const dispatch = useTasksDispatch();
   const {
     isNew,
@@ -45,10 +47,7 @@ export default function TaskMenuContent() {
     billingProfileId,
   } = task;
   const handleCancelClick = async () => {
-
-  };
-  const handleClickDelete = async () => {
-
+    dispatch({ type: 'CANCEL' });
   };
   const fetchTasks = async () => {
     try {
@@ -58,8 +57,19 @@ export default function TaskMenuContent() {
       logger.error(`Failed to fetch tasks: ${err}`);
     }
   };
-  const handleCreateTask = async () => {
-    dispatch({ type: 'CREATE' });
+  const handleClickDelete = async () => {
+    const deleteId = tasks[selectedTaskIndex].id;
+    try {
+      await ipcRenderer.invoke(DELETE_TASK, deleteId);
+      dispatch({ type: 'RESET' });
+    } catch (err) {
+      logger.error(`Failed to delete task ${deleteId}: ${err}`);
+    } finally {
+      fetchTasks();
+    }
+  };
+  const handleClickNew = async () => {
+    dispatch({ type: 'NEW' });
   };
   const handleTaskFieldUpdate = (field) => (event) => {
     dispatch({
@@ -68,20 +78,45 @@ export default function TaskMenuContent() {
       value: event.target.value,
     });
   };
-  const handleTaskUpdate = async () => {
-    if (isNew) {
-      dispatch({
-        type: 'UPDATE_TASK',
-      });
-    }
+  const handleClickSave = async () => {
     try {
-      await ipcRenderer.invoke(UPDATE_TASK, isNew, task);
+      await ipcRenderer.invoke(CREATE_TASK, task);
+      dispatch({ type: 'RESET' });
     } catch (err) {
       logger.error(err);
     } finally {
       fetchTasks();
     }
   };
+  const handleClickUpdate = async () => {
+    try {
+      await ipcRenderer.invoke(UPDATE_TASK, task);
+    } catch (err) {
+      logger.error(err);
+    } finally {
+      fetchTasks();
+    }
+  };
+  const handleClickExecute = async () => {
+    try {
+      const [billingProfile] = billingProfiles.filter((bp) => billingProfileId === bp.id);
+      await ipcRenderer.invoke(EXECUTE_TASK, task, billingProfile);
+      dispatch({ type: 'RESET' });
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  useEffect(() => {
+    if (selectedTaskIndex !== null) {
+      dispatch({
+        type: 'SWITCH_TASK',
+        task: tasks[selectedTaskIndex],
+      });
+    }
+  }, [selectedTaskIndex]);
+  useEffect(() => {
+    fetchTasks();
+  }, []);
   return (
     <Grid
       container
@@ -107,7 +142,7 @@ export default function TaskMenuContent() {
                 selectedTaskIndex: event.target.value,
               })}
             >
-              {tasks.map((bp, index) => <MenuItem value={index}>{bp.firstname}</MenuItem>)}
+              {tasks.map((bp, index) => <MenuItem value={index}>{`${bp.store} - ${bp.id}`}</MenuItem>)}
             </Select>
           </FormControl>
         </Grid>
@@ -116,85 +151,101 @@ export default function TaskMenuContent() {
           <Button
             variant="contained"
             fullWidth
-            onClick={handleCreateTask}
+            onClick={handleClickNew}
           >
             NEW
           </Button>
         </Grid>
       </Grid>
-      <Grid
-        item
-        xs={12}
-        container
-        spacing={3}
-        justifyContent="center"
-      >
+      {(selectedTaskIndex !== null || isNew) && (
         <Grid
           item
           xs={12}
           container
-          direction="column"
+          spacing={3}
+          justifyContent="center"
         >
-          <FormControl>
-            <InputLabel>Store</InputLabel>
-            <Select
-              value={store}
-              onChange={handleTaskFieldUpdate('store')}
-            >
-              <MenuItem value="Shoe Palace">Shoe Palace</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            label="URL"
-            value={url}
-            onChange={handleTaskFieldUpdate('url')}
-          />
-          <TextField
-            label="Size"
-            value={size}
-            onChange={handleTaskFieldUpdate('size')}
-          />
-          <TextField
-            label="Quanity"
-            value={quantity}
-            onChange={handleTaskFieldUpdate('quantity')}
-          />
-          <FormControl>
-            <InputLabel>Billing Profile</InputLabel>
-            <Select
-              value={store}
-              onChange={handleTaskFieldUpdate('billingProfileId')}
-            >
-              {tasks.map((task) => <h1>hi</h1>)}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          container
-          direction="row-reverse"
-        >
-          {(selectedTaskIndex !== null || isNew) && (
-            <>
-              <Button
-                variant="contained"
-                onClick={handleTaskUpdate}
+          <Grid
+            item
+            xs={12}
+            container
+            direction="column"
+          >
+            <FormControl>
+              <InputLabel>Store</InputLabel>
+              <Select
+                value={store}
+                onChange={handleTaskFieldUpdate('store')}
               >
-                SAVE
-              </Button>
+                <MenuItem value="Shoe Palace">Shoe Palace</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="URL"
+              value={url}
+              onChange={handleTaskFieldUpdate('url')}
+            />
+            <TextField
+              label="Size"
+              value={size}
+              onChange={handleTaskFieldUpdate('size')}
+            />
+            <TextField
+              label="Quanity"
+              value={quantity}
+              onChange={handleTaskFieldUpdate('quantity')}
+            />
+            <FormControl>
+              <InputLabel>Billing Profile</InputLabel>
+              <Select
+                value={billingProfileId}
+                onChange={handleTaskFieldUpdate('billingProfileId')}
+              >
+                {billingProfiles.map((profile) => (
+                  <MenuItem value={profile.id}>{profile.firstname}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            container
+            direction="row-reverse"
+          >
+            {(selectedTaskIndex !== null || isNew) && (
+              <>
+                {!isNew && (
+                  <>
+                    <Button
+                      variant="contained"
+                      onClick={handleClickExecute}
+                    >
+                      EXECUTE
+                    </Button>
+                    &nbsp;
+                    &nbsp;
+                  </>
+                )}
+                <Button
+                  variant="contained"
+                  onClick={isNew ? handleClickSave : handleClickUpdate}
+                >
+                  {isNew ? 'SAVE' : 'UPDATE'}
+                </Button>
               &nbsp;
               &nbsp;
-              <Button
-                variant="contained"
-                onClick={isNew ? handleCancelClick : handleClickDelete}
-              >
-                {isNew ? 'CANCEL' : 'DELETE'}
-              </Button>
-            </>
-          )}
+                <Button
+                  variant="contained"
+                  onClick={isNew ? handleCancelClick : handleClickDelete}
+                >
+                  {isNew ? 'CANCEL' : 'DELETE'}
+                </Button>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 }

@@ -17,18 +17,51 @@ const initialState = {
 const reducer = (draft, action) => {
   switch (action.type) {
     case 'RESET': {
-      draft = initialState;
+      draft.isNew = false;
+      draft.selectedTaskIndex = null;
+      draft.task = {
+        store: '',
+        url: '',
+        size: '',
+        quantity: '',
+        billingProfileId: '',
+      };
       break;
     }
-    case 'CREATE': {
-      draft = { ...initialState };
+    case 'SWITCH_TASK': {
+      draft.task = action.task;
       break;
     }
-    case 'UPDATE_TASK_INDEX':
+    case 'NEW': {
+      draft.isNew = true;
+      draft.selectedTaskIndex = null;
+      draft.task = {
+        store: '',
+        url: '',
+        size: '',
+        quantity: '',
+        billingProfileId: '',
+      };
+      break;
+    }
+    case 'UPDATE_TASK_INDEX': {
       draft.selectedTaskIndex = action.selectedTaskIndex;
       break;
+    }
     case 'TASK_FIELD_UPDATE': {
-      draft[action.field] = action.value;
+      draft.task[action.field] = action.value;
+      break;
+    }
+    case 'CANCEL': {
+      draft.isNew = false;
+      draft.selectedTaskIndex = null;
+      draft.task = {
+        store: '',
+        url: '',
+        size: '',
+        quantity: '',
+        billingProfileId: '',
+      };
       break;
     }
     default:

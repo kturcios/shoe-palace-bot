@@ -1,6 +1,8 @@
-const storage = require('node-persist');
+const Storage = require('node-persist');
 const { v4: uuidv4 } = require('uuid');
 const { BILLING_PROFILES_DB } = require('../../src/shared/constants');
+
+let storage = null;
 
 const listBillingProfiles = async () => await storage.getItem(BILLING_PROFILES_DB) || [];
 
@@ -26,9 +28,10 @@ const updateBillingProfileByIndex = async (updatedBillingProfile, index) => {
 };
 
 const init = async (storageDir) => {
-  await storage.init({
+  storage = await Storage.create({
     dir: storageDir,
   });
+  await storage.init();
 };
 
 module.exports = {

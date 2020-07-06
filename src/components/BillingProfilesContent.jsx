@@ -50,7 +50,12 @@ export default function BillingProfileMenuContent() {
   } = billingProfile;
   const fetchBillingProfiles = async () => {
     try {
-      setBProfilesList(await ipcRenderer.invoke(LIST_BILLING_PROFILES));
+      const billingProfilesList = await ipcRenderer.invoke(LIST_BILLING_PROFILES);
+      setBProfilesList(billingProfilesList);
+      dispatch({
+        type: 'UPDATE_BILLING_PROFILES_LIST',
+        billingProfiles: billingProfilesList,
+      });
     } catch (err) {
       logger.error(err);
     }
@@ -63,9 +68,6 @@ export default function BillingProfileMenuContent() {
       type: 'UPDATE_SELECTED_BILLING_PROFILE',
       selectedProfileIndex: event.target.value,
     });
-    // setSelectedProfile(event.target.value);
-    logger.info('selected profile index: ', event.target.value);
-    logger.info(bProfilesList[event.target.value]);
     dispatch({
       type: 'switch-billing-profile',
       billingProfile: bProfilesList[event.target.value],

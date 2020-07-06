@@ -1,22 +1,28 @@
 const { app, ipcMain } = require('electron');
-const storage = require('node-persist');
+const Storage = require('node-persist');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('electron-log');
+const { order } = require('../utils/shoe-palace-checkout');
 
+let storage = null;
 let initialized = false;
-const storageDir = app.getPath('appData');
+// const storageDir = app.getPath('appData');
+const storageDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/tasks';
+logger.info({ storageDir });
 
 const {
   LIST_TASKS,
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
+  EXECUTE_TASK,
 } = require('../../src/shared/constants');
 
 const init = async () => {
-  await storage.init({
+  storage = await Storage.create({
     dir: storageDir,
   });
+  await storage.init();
   initialized = true;
 };
 
@@ -62,5 +68,14 @@ ipcMain.handle(DELETE_TASK, async (event, id) => {
   }
   logger.info(`Attempting to delete task ${id}`);
   await storage.removeItem(id);
-  logger.info(`Task ${id} deleted`);
+  logger.info(`Task deleted: ${id}`);
+});
+
+ipcMain.handle(EXECUTE_TASK, async (event, task, billingProfile) => {
+  const checkoutOptions = {
+    ...task,
+    ...billingProfile,
+  };
+  logger.info(`Attempting to checkout order with: ${JSON.stringify(checkoutOptions, null, 2)}`);
+  await order(checkoutOptions);
 });

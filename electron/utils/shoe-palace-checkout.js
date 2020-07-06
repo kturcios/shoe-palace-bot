@@ -49,7 +49,7 @@ const order = async ({
   await page.setViewport({ width: 1280, height: 1200 });
 
   // Load shoe URL directly
-  await page.goto('https://www.shoepalace.com/product/jordan/cd0461-100/air-jordan-1-high-og-tie-dye-womens-lifestyle-shoe-white-black-tie-dye-blue-limit-one-per-customer/');// 'https://www.shoepalace.com/product/nike/cj0625-700/air-max-97-womens-running-shoe-gold-white/', { waitUntil: 'networkidle2' });
+  await page.goto(url, { waitUntil: 'networkidle2' });
   // Wait until 'Sale' window apppears in iframe
   await page.waitForSelector('[title="Sign Up via Text for Offers"]');
   const iframe = await iframeAttached(page, 'attentive_creative');
@@ -62,7 +62,7 @@ const order = async ({
   await page.evaluate(async (sz) => {
     const buttons = document.getElementsByClassName('button w32 dark');
     for (let i = 0; i < buttons.length; i += 1) {
-      if (buttons[i].innerText === '10') {
+      if (buttons[i].innerText === sz) {
         buttons[i].click();
         found = true;
       }
@@ -76,37 +76,37 @@ const order = async ({
     //   throw new Error('Shoe size not available');
     // }
   }, found);
-  await page.waitForSelector('body');
-  console.info('Waiting for timer....');
-  await page.waitForFunction('document.querySelector("body").innerText.includes("TRY AGAIN")', { timeout: 0 });
-  console.info('timer is complete');
-  await page.evaluate(() => {
-    console.info('Clicked try again');
-    document.querySelector('[onclick="window.history.go(-1); return false;"]').click();
-  });
-  await page.waitForSelector('[class="button w32 dark"]');
-  console.info('Trying again...');
-  found = false;
-  await page.evaluate(async (sz) => {
-    const buttons = document.getElementsByClassName('button w32 dark');
-    for (let i = 0; i < buttons.length; i += 1) {
-      if (buttons[i].innerText === '10') {
-        buttons[i].click();
-        found = true;
-      }
-    }
-  }, size);
-  await page.evaluate(() => {
-    // if (found) {
-    document.getElementById('oCartSubmit').click();
-    // } else {
-    //   throw new Error('Shoe size not available');
-    // }
-  });
+  // await page.waitForSelector('body');
+  // console.info('Waiting for timer....');
+  // await page.waitForFunction('document.querySelector("body").innerText.includes("TRY AGAIN")', { timeout: 0 });
+  // console.info('timer is complete');
+  // await page.evaluate(() => {
+  //   console.info('Clicked try again');
+  //   document.querySelector('[onclick="window.history.go(-1); return false;"]').click();
+  // });
+  // await page.waitForSelector('[class="button w32 dark"]');
+  // console.info('Trying again...');
+  // found = false;
+  // await page.evaluate(async (sz) => {
+  //   const buttons = document.getElementsByClassName('button w32 dark');
+  //   for (let i = 0; i < buttons.length; i += 1) {
+  //     if (buttons[i].innerText === '10') {
+  //       buttons[i].click();
+  //       found = true;
+  //     }
+  //   }
+  // }, size);
+  // await page.evaluate(() => {
+  //   // if (found) {
+  //   document.getElementById('oCartSubmit').click();
+  //   // } else {
+  //   //   throw new Error('Shoe size not available');
+  //   // }
+  // });
   await page.waitForSelector('[maxlength="2"]');
   // Update shoe quantity to 4
   await page.evaluate((qty) => {
-    document.querySelector('[maxlength="2"]').value = '4';
+    document.querySelector('[maxlength="2"]').value = qty;
   }, quantity);
 
   // Wait and click on checkout button
@@ -115,15 +115,15 @@ const order = async ({
 
   // Fill out address details
   await page.waitForSelector('[class="required-entry input-text"]');
-  await page.type('[id="billing:firstname"]', 'andre');
-  await page.type('[id="billing:lastname"]', 'marques');
-  await page.type('[id="billing:street1"]', '10240 capitol view ave');
-  await page.type('[id="billing:city"]', 'silver spring');
-  await page.select('[id="billing:region_id"]', '31');
-  await page.type('[id="billing:postcode"]', '20910');
-  await page.type('[id="billing:telephone"]', '301-792-8948');
-  await page.type('[id="billing:email"]', 'andre.c.marques7@gmail.com');
-  await page.type('[id="billing:confirmemail"]', 'andre.c.marques7@gmail.com');
+  await page.type('[id="billing:firstname"]', firstname);
+  await page.type('[id="billing:lastname"]', lastname);
+  await page.type('[id="billing:street1"]', street);
+  await page.type('[id="billing:city"]', city);
+  await page.select('[id="billing:region_id"]', state);
+  await page.type('[id="billing:postcode"]', zip);
+  await page.type('[id="billing:telephone"]', phoneNumber);
+  await page.type('[id="billing:email"]', email);
+  await page.type('[id="billing:confirmemail"]', email);
 
   // Select option to pay with credit card
   await page.evaluate(() => {
@@ -131,11 +131,11 @@ const order = async ({
   });
 
   // Fill out credit card details
-  await page.select('[id="firstdataglobalgateway_cc_type"]', 'MC');
-  await page.type('[id="firstdataglobalgateway_cc_number"]', '5313671235003042');
-  await page.select('[id="firstdataglobalgateway_expiration"]', '6');
-  await page.select('[id="firstdataglobalgateway_expiration_yr"]', '2026');
-  await page.type('[id="firstdataglobalgateway_cc_cid"]', '626');
+  await page.select('[id="firstdataglobalgateway_cc_type"]', ccType);
+  await page.type('[id="firstdataglobalgateway_cc_number"]', cc);
+  await page.select('[id="firstdataglobalgateway_expiration"]', expMonth);
+  await page.select('[id="firstdataglobalgateway_expiration_yr"]', expYear);
+  await page.type('[id="firstdataglobalgateway_cc_cid"]', ccv);
 
   // Wait and select flat rate shipping
   await page.waitForSelector('[id="s_method_flatrate_flatrate"]');

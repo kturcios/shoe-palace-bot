@@ -21,6 +21,7 @@ createConstant('LIST_TASKS', 'list-tasks');
 createConstant('CREATE_TASK', 'create-task');
 createConstant('UPDATE_TASK', 'update-task');
 createConstant('DELETE_TASK', 'delete-task');
+createConstant('EXECUTE_TASK', 'execute-task');
 
 /* --------------------------------------------------- */
 
