@@ -21,6 +21,7 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import BillingProfilesContent from './components/BillingProfilesContent';
 import TasksContent from './components/TasksContent';
+import ProfileView from './components/ProfileView';
 
 const drawerWidth = 240;
 
@@ -99,7 +100,7 @@ export default function App() {
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const [open, setOpen] = useState(true);
   const menus = [
-    <BillingProfilesContent />,
+    <ProfileView />, // <BillingProfilesContent />,
     <TasksContent />,
   ];
 

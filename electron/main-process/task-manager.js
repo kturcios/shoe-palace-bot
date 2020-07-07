@@ -2,12 +2,13 @@ const { app, ipcMain } = require('electron');
 const Storage = require('node-persist');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('electron-log');
+const { join } = require('path');
 const { order } = require('../utils/shoe-palace-checkout');
 
 let storage = null;
 let initialized = false;
-// const storageDir = app.getPath('appData');
-const storageDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/tasks';
+const storageDir = join(app.getPath('appData'), 'tasks');
+// const storageDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/tasks';
 logger.info({ storageDir });
 
 const {

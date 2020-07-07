@@ -9,25 +9,25 @@ const {
 const { join } = require('path');
 const { sync } = require('glob');
 const isDev = require('electron-is-dev');
-const { checkForUpdates, silentCheckForUpdates } = require('./utils/auto-update');
+// const { checkForUpdates, silentCheckForUpdates } = require('./utils/auto-update');
 
 let mainWindow;
 
-const configureMenu = () => {
-  const { items } = Menu.getApplicationMenu();
-  items[0] = new MenuItem({
-    label: app.name,
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { label: 'Checking for updates...', enabled: false, click: () => checkForUpdates() },
-      { type: 'separator' },
-      { role: 'quit' },
-    ],
-  });
-  const template = Menu.buildFromTemplate(items);
-  Menu.setApplicationMenu(template);
-};
+// const configureMenu = () => {
+//   const { items } = Menu.getApplicationMenu();
+//   items[0] = new MenuItem({
+//     label: app.name,
+//     submenu: [
+//       { role: 'about' },
+//       { type: 'separator' },
+//       { label: 'Checking for updates...', enabled: false, click: () => checkForUpdates() },
+//       { type: 'separator' },
+//       { role: 'quit' },
+//     ],
+//   });
+//   const template = Menu.buildFromTemplate(items);
+//   Menu.setApplicationMenu(template);
+// };
 
 const loadMainProcesses = () => {
   const files = sync(join(__dirname, 'main-process/**/*.js'));
@@ -54,10 +54,10 @@ const createWindow = () => {
 
 app.on('ready', () => {
   loadMainProcesses();
-  configureMenu();
+  // configureMenu();
   createWindow();
   // Check for updates on start after 5 seconds
-  setTimeout(() => silentCheckForUpdates(), 5000);
+  // setTimeout(() => silentCheckForUpdates(), 5000);
 });
 
 app.on('window-all-closed', () => {

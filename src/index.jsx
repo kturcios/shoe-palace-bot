@@ -5,14 +5,17 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import BillingProfileFormContextProvider from './contexts/BillingProfilesContext';
 import TaskContextProvider from './contexts/TasksContext';
+import ProfileViewContextProvider from './contexts/ProfileViewContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <TaskContextProvider>
-      <BillingProfileFormContextProvider>
-        <App />
-      </BillingProfileFormContextProvider>
-    </TaskContextProvider>
+    <ProfileViewContextProvider>
+      <TaskContextProvider>
+        <BillingProfileFormContextProvider>
+          <App />
+        </BillingProfileFormContextProvider>
+      </TaskContextProvider>
+    </ProfileViewContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

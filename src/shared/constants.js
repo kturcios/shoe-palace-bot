@@ -11,6 +11,9 @@ createConstant('PROCESS_ORDER', 'process-order');
 
 /* -------------------- Channels -------------------- */
 
+// Profile View
+createConstant('LIST_PROFILES', 'list-profiles');
+
 // Billing Profiles
 createConstant('LIST_BILLING_PROFILES', 'list-billing-profiles');
 createConstant('CREATE_BILLING_PROFILE', 'create-billing-profile');

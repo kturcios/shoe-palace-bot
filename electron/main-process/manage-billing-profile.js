@@ -1,5 +1,6 @@
 const { app, ipcMain } = require('electron');
 const logger = require('electron-log');
+const { join } = require('path');
 const storage = require('../utils/data-store');
 const {
   UPDATE_BILLING_PROFILE,
@@ -8,8 +9,8 @@ const {
 } = require('../../src/shared/constants');
 
 let initialized = false;
-// const dataDir = app.getPath('appData');
-const dataDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/billing-profiles';
+const dataDir = join(app.getPath('appData'), 'billingProfiles');
+// const dataDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/billing-profiles';
 
 ipcMain.handle(UPDATE_BILLING_PROFILE, async (event, isNew, billingProfile) => {
   if (!initialized) {

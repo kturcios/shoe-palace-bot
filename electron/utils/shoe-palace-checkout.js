@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
-
-const getChromiumExecPath = () => puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked/node_modules/puppeteer');
+const logger = require('electron-log');
+// const getChromiumExecPath = () => puppeteer.executablePath().replace('app.asar', 'app.asar.unpacked/node_modules/puppeteer');
 
 /**
  * Waits until the iframe is attached and then returns it to the caller
@@ -43,7 +43,7 @@ const order = async ({
     args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
     headless: false,
     slowMo: 1,
-    executablePath: getChromiumExecPath(),
+    // executablePath: '/Applications/Google\\ Chrome', //getChromiumExecPath(),
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 1200 });
@@ -59,18 +59,21 @@ const order = async ({
 
   // Search through all available sizes and click on the desired size if is available
   let found = false;
+  logger.info(`Looking for size ${size}...`);
   await page.evaluate(async (sz) => {
     const buttons = document.getElementsByClassName('button w32 dark');
     for (let i = 0; i < buttons.length; i += 1) {
       if (buttons[i].innerText === sz) {
         buttons[i].click();
         found = true;
+        logger.info(`Size ${sz} available!`);
       }
     }
     // HANDLE TIMER HERE
   }, size);
   await page.evaluate((found) => {
     // if (found) {
+    logger.info('Clicking on checkout button...');
     document.getElementById('oCartSubmit').click();
     // } else {
     //   throw new Error('Shoe size not available');
@@ -105,6 +108,7 @@ const order = async ({
   // });
   await page.waitForSelector('[maxlength="2"]');
   // Update shoe quantity to 4
+  logger.info(`Attempting to increase quantity to ${quantity}`);
   await page.evaluate((qty) => {
     document.querySelector('[maxlength="2"]').value = qty;
   }, quantity);

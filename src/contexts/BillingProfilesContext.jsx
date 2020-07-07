@@ -80,7 +80,6 @@ function reducer(draft, action) {
       break;
     }
     case 'switch-billing-profile': {
-      logger.info('SWITCHED TO: ', action.billingProfile);
       draft.billingProfile = action.billingProfile;
       break;
     }

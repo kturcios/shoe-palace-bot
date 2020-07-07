@@ -337,7 +337,7 @@ export default function BillingProfileMenuContent() {
                 onChange={handleProfileFieldUpdate('expYear')}
               />
               <TextField
-                label="CCV (Security Code)"
+                label="CVV (Security Code)"
                 value={ccv}
                 onChange={handleProfileFieldUpdate('ccv')}
               />
