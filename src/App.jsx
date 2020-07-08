@@ -22,6 +22,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import BillingProfilesContent from './components/BillingProfilesContent';
 import TasksContent from './components/TasksContent';
 import ProfileView from './components/ProfileView';
+import ProfilesMenu from './components/ProfilesMenu';
 
 const drawerWidth = 240;
 
@@ -100,7 +101,7 @@ export default function App() {
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const [open, setOpen] = useState(true);
   const menus = [
-    <ProfileView />, // <BillingProfilesContent />,
+    <ProfilesMenu />, // <ProfileView />, // <BillingProfilesContent />,
     <TasksContent />,
   ];
 
@@ -114,7 +115,7 @@ export default function App() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar posiƒƒtion="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"

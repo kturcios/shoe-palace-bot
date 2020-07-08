@@ -9,7 +9,7 @@ import {
   TextField,
   Container,
 } from '@material-ui/core';
-import { useProfileViewState, useProfileViewDispatch } from '../contexts/ProfileViewContext';
+import { useProfilesState, useProfilesDispatch } from '../contexts/ProfilesContext';
 import {
   LIST_PROFILES,
 } from '../shared/constants';
@@ -17,14 +17,14 @@ import {
 const { logger, ipcRenderer } = window;
 
 export default function ProfileView() {
-  const dispatch = useProfileViewDispatch();
+  const dispatch = useProfilesDispatch();
   const {
     shipping,
     billing,
     payment,
     profiles,
     index,
-  } = useProfileViewState();
+  } = useProfilesState();
   const handleUpdateIndex = (event) => {
     dispatch({
       type: 'UPDATE_INDEX',

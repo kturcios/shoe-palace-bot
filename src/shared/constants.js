@@ -11,6 +11,9 @@ createConstant('PROCESS_ORDER', 'process-order');
 
 /* -------------------- Channels -------------------- */
 
+// Profiles
+createConstant('UPDATE_PROFILES_LIST', 'update-profiles-list');
+
 // Profile View
 createConstant('LIST_PROFILES', 'list-profiles');
 
