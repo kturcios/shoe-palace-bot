@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import BillingProfileFormContextProvider from './contexts/BillingProfilesContext';
-import TaskContextProvider from './contexts/TasksContext';
+import TaskContextProvider from './contexts/tasks/TasksContext';
 import ProfilesContextProvider from './contexts/profiles/ProfilesContext';
 import CustomThemeProvider from './CustomThemeProvider';
 

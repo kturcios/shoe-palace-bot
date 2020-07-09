@@ -19,12 +19,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import BillingProfilesContent from './components/BillingProfilesContent';
-import TasksContent from './components/TasksContent';
+// import TasksContent from './components/TasksContent';
 import ProfileView from './components/ProfileView';
 import ProfilesMenu from './components/ProfilesMenu';
+import TasksMenu from './components/TasksMenu';
 import NewProfileForm from './components/NewProfileForm';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import NewTaskForm from './components/NewTaskForm';
 
 const drawerWidth = 260;
 
@@ -99,13 +101,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function App() {
+  const [taskFormOpen, setTaskFormOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const classes = useStyles();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const [open, setOpen] = useState(true);
   const menus = [
     <ProfilesMenu />, // <ProfileView />, // <BillingProfilesContent />,
-    <TasksContent />,
+    <TasksMenu />, // <TasksContent />,
   ];
 
   const handleDrawerOpen = () => {
@@ -172,6 +175,11 @@ export default function App() {
               <FormatListBulletedIcon />
             </ListItemIcon>
             <ListItemText primary="Tasks" />
+            <IconButton
+              onClick={() => setTaskFormOpen(true)}
+            >
+              <AddCircleIcon />
+            </IconButton>
           </ListItem>
         </List>
       </Drawer>
@@ -182,6 +190,7 @@ export default function App() {
         </Container>
       </main>
       <NewProfileForm open={formOpen} onClose={() => setFormOpen(false)} />
+      <NewTaskForm open={taskFormOpen} onClose={() => setTaskFormOpen(false)} />
     </div>
   );
 }
