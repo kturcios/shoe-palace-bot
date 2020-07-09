@@ -23,8 +23,10 @@ import BillingProfilesContent from './components/BillingProfilesContent';
 import TasksContent from './components/TasksContent';
 import ProfileView from './components/ProfileView';
 import ProfilesMenu from './components/ProfilesMenu';
+import NewProfileForm from './components/NewProfileForm';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function App() {
+  const [formOpen, setFormOpen] = useState(false);
   const classes = useStyles();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const [open, setOpen] = useState(true);
@@ -154,6 +157,11 @@ export default function App() {
               <AccountBoxIcon />
             </ListItemIcon>
             <ListItemText primary="Billings Profiles" />
+            <IconButton
+              onClick={() => setFormOpen(true)}
+            >
+              <AddCircleIcon />
+            </IconButton>
           </ListItem>
           <ListItem
             button
@@ -173,6 +181,7 @@ export default function App() {
           {menus[selectedMenuIndex]}
         </Container>
       </main>
+      <NewProfileForm open={formOpen} onClose={() => setFormOpen(false)} />
     </div>
   );
 }

@@ -11,11 +11,14 @@ createConstant('PROCESS_ORDER', 'process-order');
 
 /* -------------------- Channels -------------------- */
 
-// Profiles
+// Profiles (depcrecated)
 createConstant('UPDATE_PROFILES_LIST', 'update-profiles-list');
 
-// Profile View
+// Profiles
 createConstant('LIST_PROFILES', 'list-profiles');
+createConstant('CREATE_PROFILE', 'create-profile');
+createConstant('UPDATE_PROFILE', 'update-profile');
+createConstant('DELETE_PROFILE', 'delete-profile');
 
 // Billing Profiles
 createConstant('LIST_BILLING_PROFILES', 'list-billing-profiles');

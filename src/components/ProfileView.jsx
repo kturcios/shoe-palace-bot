@@ -9,7 +9,7 @@ import {
   TextField,
   Container,
 } from '@material-ui/core';
-import { useProfilesState, useProfilesDispatch } from '../contexts/ProfilesContext';
+import { useProfilesState, useProfilesDispatch } from '../contexts/profiles/ProfilesContext';
 import {
   LIST_PROFILES,
 } from '../shared/constants';

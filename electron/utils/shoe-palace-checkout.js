@@ -35,7 +35,7 @@ const order = async ({
   zip,
   ccType,
   cc,
-  ccv,
+  cvv,
   expMonth,
   expYear,
 }) => {
@@ -139,7 +139,7 @@ const order = async ({
   await page.type('[id="firstdataglobalgateway_cc_number"]', cc);
   await page.select('[id="firstdataglobalgateway_expiration"]', expMonth);
   await page.select('[id="firstdataglobalgateway_expiration_yr"]', expYear);
-  await page.type('[id="firstdataglobalgateway_cc_cid"]', ccv);
+  await page.type('[id="firstdataglobalgateway_cc_cid"]', cvv);
 
   // Wait and select flat rate shipping
   await page.waitForSelector('[id="s_method_flatrate_flatrate"]');
