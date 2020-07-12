@@ -50,7 +50,7 @@ ipcMain.handle(UPDATE_PROFILE, async (event, profile) => {
   }
   logger.info(`Attempting to update profile ${profile.id}...`);
   await db.updateItem(profile.id, profile);
-  logger.info(`Profile successfully updated: ${profile}`);
+  logger.info(`Profile successfully updated: ${profile.id}`);
 });
 
 ipcMain.handle(DELETE_PROFILE, async (event, id) => {

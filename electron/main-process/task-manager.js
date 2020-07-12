@@ -49,7 +49,7 @@ ipcMain.handle(CREATE_TASK, async (event, taskDef) => {
   };
   logger.info('Attempting to create a new task...');
   await storage.setItem(id, newTask);
-  logger.info(`New task successfully created: ${newTask}`);
+  logger.info(`New task successfully created: ${JSON.stringify(newTask)}`);
 });
 
 // Update an existing task by id

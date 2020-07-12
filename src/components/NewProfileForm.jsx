@@ -29,7 +29,6 @@ export default function NewProfileForm({ open, onClose }) {
   } = profile;
   const handleCreate = async () => {
     try {
-      logger.info('Create profile: ', profile);
       await create(profile);
       alert('Profile Created!');
     } catch (err) {
