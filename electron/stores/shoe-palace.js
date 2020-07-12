@@ -51,7 +51,7 @@ const selectSize = async (page, size) => {
       }
     }
     if (!found) {
-      throw new Error(`Size ${size} is not available`);
+      throw new Error(`Size ${sz} is not available`);
     }
   }, size);
 };
