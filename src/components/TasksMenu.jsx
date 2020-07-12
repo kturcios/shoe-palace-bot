@@ -39,13 +39,13 @@ export default function TasksMenu() {
     tasks,
     update,
     remove,
+    start,
   } = useTasks();
   const {
     store,
     url,
     size,
     quantity,
-    profile,
   } = currentTask;
   useEffect(() => {
     if (currentIndex !== '') {
@@ -81,13 +81,21 @@ export default function TasksMenu() {
   const updateSelectedProfile = (event) => {
     logger.info('Target received: ', event.target.value);
     const [selectedProfile] = profiles.filter(({ id }) => event.target.value === id);
-    logger.info('selected profile: ', selectedProfile)
+    logger.info('selected profile: ', selectedProfile);
     setCurrentTask({
       ...currentTask,
       profile: {
         ...selectedProfile,
       },
     });
+  };
+  const handleStart = async () => {
+    try {
+      await start(currentTask);
+    } catch (err) {
+      logger.error(err);
+      alert(`Failed to start task: ${err}`);
+    }
   };
   return (
     <Container
@@ -169,7 +177,7 @@ export default function TasksMenu() {
           item
           xs={12}
           container
-          justify="flex-end"
+          justify="center"
         >
           <Button
             variant="contained"
@@ -190,6 +198,17 @@ export default function TasksMenu() {
             onClick={handleUpdate}
           >
             UPDATE
+          </Button>
+          &nbsp;
+          &nbsp;
+          <Button
+            variant="contained"
+            style={{
+              display: currentIndex === '' ? 'none' : 'block',
+            }}
+            onClick={handleStart}
+          >
+            START
           </Button>
         </Grid>
       </Grid>

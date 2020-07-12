@@ -10,6 +10,7 @@ import {
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
+  START_TASK,
 } from './shared/constants';
 
 const { ipcRenderer, logger } = window;
@@ -102,6 +103,9 @@ export function useTasks() {
       logger.error(err);
     }
   };
+  const start = async (task) => {
+    await ipcRenderer.invoke(START_TASK, task);
+  };
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -110,5 +114,6 @@ export function useTasks() {
     create,
     update,
     remove,
+    start,
   };
 }

@@ -4,10 +4,14 @@ const { v4: uuidv4 } = require('uuid');
 const logger = require('electron-log');
 const { join } = require('path');
 const { order } = require('../utils/shoe-palace-checkout');
+const shoepalace = require('../stores/shoe-palace');
 
 let storage = null;
 let initialized = false;
-const storageDir = join(app.getPath('appData'), 'tasks');
+// app.getPath('appData') = /Users/<user>/Library/Application Support
+// app.getName() = Hands.IO
+// So the full path will result in: /Users/<user>/Library/Application Support/Hands.IO/tasks
+const storageDir = join(app.getPath('appData'), app.getName(), 'Tasks');
 // const storageDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/tasks';
 logger.info({ storageDir });
 
@@ -17,6 +21,7 @@ const {
   UPDATE_TASK,
   DELETE_TASK,
   EXECUTE_TASK,
+  START_TASK,
 } = require('../../src/shared/constants');
 
 const init = async () => {
@@ -34,6 +39,7 @@ ipcMain.handle(LIST_TASKS, async () => {
   }
   logger.info('Attempting to list tasks...');
   const tasks = await storage.values();
+  logger.info('tasks list: ', JSON.stringify(tasks, null, 2));
   return tasks;
 });
 
@@ -79,4 +85,14 @@ ipcMain.handle(EXECUTE_TASK, async (event, task, billingProfile) => {
   };
   logger.info(`Attempting to checkout order with: ${JSON.stringify(checkoutOptions, null, 2)}`);
   await order(checkoutOptions);
+});
+
+ipcMain.handle(START_TASK, async (event, task) => {
+  switch (task.store) {
+    case 'Shoe Palace':
+      await shoepalace.startTask(task);
+      break;
+    default:
+      throw new Error('Unrecognized store');
+  }
 });

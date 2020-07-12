@@ -10,7 +10,8 @@ const {
   DELETE_PROFILE,
 } = require('../../src/shared/constants');
 
-const storageDir = join(app.getPath('appData'), 'profiles');
+const storageDir = join(app.getPath('appData'), app.getName(), 'Profiles');
+logger.info('storage directory: ', storageDir);
 
 let db = null;
 
@@ -27,6 +28,7 @@ ipcMain.handle(LIST_PROFILES, async () => {
   }
   logger.info('Attempting to list profiles...');
   const profiles = await db.values();
+  logger.info('profile list: ', JSON.stringify(profiles, null, 2));
   return profiles;
 });
 
