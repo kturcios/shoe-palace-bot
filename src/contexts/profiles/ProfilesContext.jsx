@@ -3,6 +3,7 @@ import React, {
   useContext,
   useReducer,
 } from 'react';
+import { UPDATE_PROFILES_LIST } from '../../shared/constants';
 
 const initialState = {
   profiles: [],
@@ -10,7 +11,7 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'UPDATE_PROFILES_LIST': {
+    case UPDATE_PROFILES_LIST: {
       return {
         ...state,
         profiles: [...action.profiles],

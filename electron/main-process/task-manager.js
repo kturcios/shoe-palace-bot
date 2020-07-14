@@ -8,11 +8,12 @@ const shoepalace = require('../stores/shoe-palace');
 
 let storage = null;
 let initialized = false;
-// app.getPath('appData') = /Users/<user>/Library/Application Support
-// app.getName() = Hands.IO
-// So the full path will result in: /Users/<user>/Library/Application Support/Hands.IO/tasks
+/*
+  app.getPath('appData') = /Users/<user>/Library/Application Support
+  app.getName() = Hands.IO
+  So the full path will result in: /Users/<user>/Library/Application Support/Hands.IO/tasks
+*/
 const storageDir = join(app.getPath('appData'), app.getName(), 'Tasks');
-// const storageDir = '/Users/kturcios/GitHub/shoe-palace-bot/storage/tasks';
 logger.info({ storageDir });
 
 const {

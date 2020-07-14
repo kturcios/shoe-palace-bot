@@ -1,5 +1,8 @@
+const chromeLauncher = require('chrome-launcher');
 const puppeteer = require('puppeteer');
 const logger = require('electron-log');
+const request = require('request');
+const { promisify } = require('util');
 
 /**
  * Waits until the iframe is attached and then returns it to the caller
@@ -162,12 +165,25 @@ const startTask = async (task) => {
     billing,
     payment,
   } = profile;
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
-    headless: false,
-    slowMo: 1,
-    // executablePath: '/Applications/Google\\ Chrome', //getChromiumExecPath(),
-  });
+  const opts = {
+    chromeFlags: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
+    logLevel: 'info',
+    output: 'json',
+  };
+  const chrome = await chromeLauncher.launch(opts);
+  opts.port = chrome.port;
+
+  // Connect to it using puppeteer.connect().
+  const resp = await promisify(request)(`http://localhost:${opts.port}/json/version`);
+  const { webSocketDebuggerUrl } = JSON.parse(resp.body);
+  const browser = await puppeteer.connect({ browserWSEndpoint: webSocketDebuggerUrl });
+
+  // const browser = await puppeteer.launch({
+  //   args: ['--no-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process'],
+  //   headless: false,
+  //   slowMo: 1,
+  //   // executablePath: '/Applications/Google\\ Chrome', //getChromiumExecPath(),
+  // });
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 1200 });
 

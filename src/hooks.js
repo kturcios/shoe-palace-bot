@@ -6,11 +6,13 @@ import {
   CREATE_PROFILE,
   UPDATE_PROFILE,
   DELETE_PROFILE,
+  UPDATE_PROFILES_LIST,
   LIST_TASKS,
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
   START_TASK,
+  UPDATE_TASKS_LIST,
 } from './shared/constants';
 
 const { ipcRenderer, logger } = window;
@@ -23,7 +25,7 @@ export function useProfiles() {
     try {
       const profilesList = await ipcRenderer.invoke(LIST_PROFILES);
       dispatch({
-        type: 'UPDATE_PROFILES_LIST',
+        type: UPDATE_PROFILES_LIST,
         profiles: profilesList,
       });
     } catch (err) {
@@ -72,7 +74,7 @@ export function useTasks() {
     try {
       const tasksList = await ipcRenderer.invoke(LIST_TASKS);
       dispatch({
-        type: 'UPDATE_TASKS_LIST',
+        type: UPDATE_TASKS_LIST,
         tasks: tasksList,
       });
     } catch (err) {

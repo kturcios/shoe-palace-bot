@@ -3,6 +3,7 @@ import React, {
   useContext,
   useReducer,
 } from 'react';
+import { UPDATE_TASKS_LIST } from '../../shared/constants';
 
 const initialState = {
   tasks: [],
@@ -10,7 +11,7 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'UPDATE_TASKS_LIST': {
+    case UPDATE_TASKS_LIST: {
       return {
         ...state,
         tasks: [...action.tasks],
