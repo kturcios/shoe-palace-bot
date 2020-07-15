@@ -11,7 +11,6 @@ const {
 } = require('../../src/shared/constants');
 
 const storageDir = join(app.getPath('appData'), app.getName(), 'Profiles');
-logger.info('storage directory: ', storageDir);
 
 let db = null;
 

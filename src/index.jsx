@@ -5,17 +5,20 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import TaskContextProvider from './contexts/tasks/TasksContext';
 import ProfilesContextProvider from './contexts/profiles/ProfilesContext';
+import ProxiesContextProvider from './contexts/proxies/ProxiesContext';
 import CustomThemeProvider from './CustomThemeProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <CustomThemeProvider>
-      <ProfilesContextProvider>
-        <TaskContextProvider>
-          <App />
-        </TaskContextProvider>
-      </ProfilesContextProvider>
-    </CustomThemeProvider>
+    <ProxiesContextProvider>
+      <CustomThemeProvider>
+        <ProfilesContextProvider>
+          <TaskContextProvider>
+            <App />
+          </TaskContextProvider>
+        </ProfilesContextProvider>
+      </CustomThemeProvider>
+    </ProxiesContextProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

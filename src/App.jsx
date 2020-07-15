@@ -20,10 +20,13 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import LanguageIcon from '@material-ui/icons/Language';
 import ProfilesMenu from './components/ProfilesMenu';
 import TasksMenu from './components/TasksMenu';
+import ProxiesMenu from './components/ProxiesMenu';
 import NewProfileForm from './components/NewProfileForm';
 import NewTaskForm from './components/NewTaskForm';
+import NewProxyForm from './components/NewProxyForm';
 
 const drawerWidth = 260;
 
@@ -98,14 +101,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function App() {
+  const [proxyFormOpen, setProxyFormOpen] = useState(false);
   const [taskFormOpen, setTaskFormOpen] = useState(false);
-  const [formOpen, setFormOpen] = useState(false);
+  const [profileFormOpen, setProfileFormOpen] = useState(false);
   const classes = useStyles();
   const [selectedMenuIndex, setSelectedMenuIndex] = useState(0);
   const [open, setOpen] = useState(true);
   const menus = [
-    <ProfilesMenu />, // <ProfileView />, // <BillingProfilesContent />,
-    <TasksMenu />, // <TasksContent />,
+    <ProfilesMenu />,
+    <TasksMenu />,
+    <ProxiesMenu />,
   ];
 
   const handleDrawerOpen = () => {
@@ -156,9 +161,9 @@ export default function App() {
             <ListItemIcon>
               <AccountBoxIcon />
             </ListItemIcon>
-            <ListItemText primary="Billings Profiles" />
+            <ListItemText primary="Profiles" />
             <IconButton
-              onClick={() => setFormOpen(true)}
+              onClick={() => setProfileFormOpen(true)}
             >
               <AddCircleIcon />
             </IconButton>
@@ -178,6 +183,21 @@ export default function App() {
               <AddCircleIcon />
             </IconButton>
           </ListItem>
+          <ListItem
+            button
+            selected={selectedMenuIndex === 2}
+            onClick={() => setSelectedMenuIndex(2)}
+          >
+            <ListItemIcon>
+              <LanguageIcon />
+            </ListItemIcon>
+            <ListItemText primary="Proxies" />
+            <IconButton
+              onClick={() => setProxyFormOpen(true)}
+            >
+              <AddCircleIcon />
+            </IconButton>
+          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
@@ -186,8 +206,9 @@ export default function App() {
           {menus[selectedMenuIndex]}
         </Container>
       </main>
-      <NewProfileForm open={formOpen} onClose={() => setFormOpen(false)} />
+      <NewProfileForm open={profileFormOpen} onClose={() => setProfileFormOpen(false)} />
       <NewTaskForm open={taskFormOpen} onClose={() => setTaskFormOpen(false)} />
+      <NewProxyForm open={proxyFormOpen} onClose={() => setProxyFormOpen(false)} />
     </div>
   );
 }

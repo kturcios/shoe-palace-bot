@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useProfilesState, useProfilesDispatch } from './contexts/profiles/ProfilesContext';
 import { useTasksState, useTasksDispatch } from './contexts/tasks/TasksContext';
+import { useProxiesState, useProxiesDispatch } from './contexts/proxies/ProxiesContext';
 import {
   LIST_PROFILES,
   CREATE_PROFILE,
@@ -13,6 +14,11 @@ import {
   DELETE_TASK,
   START_TASK,
   UPDATE_TASKS_LIST,
+  LIST_PROXIES,
+  CREATE_PROXY,
+  UPDATE_PROXY,
+  DELETE_PROXY,
+  UPDATE_PROXIES_LIST,
 } from './shared/constants';
 
 const { ipcRenderer, logger } = window;
@@ -117,5 +123,54 @@ export function useTasks() {
     update,
     remove,
     start,
+  };
+}
+
+export function useProxies() {
+  const { proxies } = useProxiesState();
+  const dispatch = useProxiesDispatch();
+  const fetchProxies = async () => {
+    try {
+      const proxiesList = await ipcRenderer.invoke(LIST_PROXIES);
+      dispatch({
+        type: UPDATE_PROXIES_LIST,
+        proxies: proxiesList,
+      });
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  const create = async (newProxy) => {
+    try {
+      await ipcRenderer.invoke(CREATE_PROXY, newProxy);
+      fetchProxies();
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  const update = async (updatedProxy) => {
+    try {
+      await ipcRenderer.invoke(UPDATE_PROXY, updatedProxy);
+      fetchProxies();
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  const remove = async (id) => {
+    try {
+      await ipcRenderer.invoke(DELETE_PROXY, id);
+      fetchProxies();
+    } catch (err) {
+      logger.error(err);
+    }
+  };
+  useEffect(() => {
+    fetchProxies();
+  }, []);
+  return {
+    proxies,
+    create,
+    update,
+    remove,
   };
 }

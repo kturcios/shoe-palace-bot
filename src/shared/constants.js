@@ -24,5 +24,11 @@ createConstant('LIST_TASKS', 'list-tasks');
 createConstant('CREATE_TASK', 'create-task');
 createConstant('UPDATE_TASK', 'update-task');
 createConstant('DELETE_TASK', 'delete-task');
-createConstant('EXECUTE_TASK', 'execute-task');
 createConstant('START_TASK', 'start-task');
+
+// Proxies
+createConstant('UPDATE_PROXIES_LIST', 'update-proxies-list'); // used by proxies context
+createConstant('LIST_PROXIES', 'list-proxies');
+createConstant('CREATE_PROXY', 'create-proxy');
+createConstant('UPDATE_PROXY', 'update-proxy');
+createConstant('DELETE_PROXY', 'delete-proxy');
