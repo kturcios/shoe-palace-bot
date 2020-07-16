@@ -9,16 +9,18 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import { useTasks, useProfiles } from '../hooks';
+import { useTasks, useProfiles, useProxies } from '../hooks';
 import InitialState from '../contexts/tasks/InitialState';
 import StoreSelect from './StoreSelect';
 import ProfileSelect from './ProfileSelect';
+import ProxyGroupSelect from './ProxyGroupSelect';
 
 const { logger } = window;
 
 export default function NewTaskForm({ open, onClose }) {
   const { create } = useTasks();
   const { profiles } = useProfiles();
+  const { proxies } = useProxies();
   const [task, setTask] = useState({ ...InitialState });
   const {
     store,
@@ -26,11 +28,13 @@ export default function NewTaskForm({ open, onClose }) {
     size,
     quantity,
     profile,
+    proxyGroup,
   } = task;
   const handleCreate = async () => {
     try {
+      logger.info(JSON.stringify(task, null, 2));
       await create(task);
-      alert('Task Created!');
+      alert('Task saved!');
     } catch (err) {
       logger.error(err);
       alert(`Failed to create task: ${err}`);
@@ -56,6 +60,15 @@ export default function NewTaskForm({ open, onClose }) {
       ...task,
       profile: {
         ...selectedProfile,
+      },
+    });
+  };
+  const updateProxyGroup = (event) => {
+    const [selectedProxyGroup] = proxies.filter(({ id }) => id === event.target.value);
+    setTask({
+      ...task,
+      proxyGroup: {
+        ...selectedProxyGroup,
       },
     });
   };
@@ -102,6 +115,10 @@ export default function NewTaskForm({ open, onClose }) {
         <ProfileSelect
           value={profile.id}
           onChange={updateProfile}
+        />
+        <ProxyGroupSelect
+          value={proxyGroup.id}
+          onChange={updateProxyGroup}
         />
       </DialogContent>
       <DialogActions>

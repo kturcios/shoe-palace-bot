@@ -6,6 +6,9 @@ const InitialState = {
   profile: {
     id: '',
   },
+  proxyGroup: {
+    id: '',
+  },
 };
 
 export default InitialState;

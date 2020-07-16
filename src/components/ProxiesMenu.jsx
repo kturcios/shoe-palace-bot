@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react';
 import {
   Grid,
@@ -12,6 +13,8 @@ import {
 } from '@material-ui/core';
 import InitialState from '../contexts/proxies/InitialState';
 import { useProxies } from '../hooks';
+
+const { logger } = window;
 
 export default function ProxiesMenu() {
   const [currentIndex, setCurrentIndex] = useState('');
@@ -28,11 +31,25 @@ export default function ProxiesMenu() {
       setCurrentProxy({ ...InitialState });
     }
   }, [currentIndex]);
-  const handleUpdate = () => {
-
+  const handleUpdate = async () => {
+    try {
+      await update(currentProxy);
+      alert('Proxy group updated');
+    } catch (err) {
+      logger.error(err);
+      alert(`Failed to update proxy: ${err}`);
+    }
   };
-  const handleDelete = () => {
-
+  const handleDelete = async () => {
+    try {
+      await remove(currentProxy.id);
+      alert('Proxy group deleted');
+    } catch (err) {
+      logger.error(err);
+      alert(`Failed to delete proxy ${err}`);
+    } finally {
+      setCurrentIndex('');
+    }
   };
   const updateCurrentProxyField = (event) => {
     setCurrentProxy({
@@ -62,8 +79,8 @@ export default function ProxiesMenu() {
               onChange={(e) => setCurrentIndex(e.target.value)}
             >
               <MenuItem value="">None</MenuItem>
-              {proxies.map(({ id, name }) => (
-                <MenuItem value={id}>
+              {proxies.map(({ name }, index) => (
+                <MenuItem value={index}>
                   {name}
                 </MenuItem>
               ))}
@@ -88,6 +105,7 @@ export default function ProxiesMenu() {
               <TextField
                 name="name"
                 label="Name"
+                variant="filled"
                 fullWidth
                 value={currentProxy.name}
                 onChange={updateCurrentProxyField}

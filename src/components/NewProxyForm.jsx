@@ -28,10 +28,13 @@ export default function NewProxyForm({ open, onClose }) {
   };
   const handleCreate = async () => {
     try {
-      await create(proxy.data);
+      await create(proxy);
+      alert('Proxy group saved!');
     } catch (err) {
       logger.error(err);
       alert(`Failed to create proxy group: ${err}`);
+    } finally {
+      onClose();
     }
   };
   useEffect(() => {
@@ -40,9 +43,6 @@ export default function NewProxyForm({ open, onClose }) {
       setProxy({ ...InitialState });
     }
   }, [open]);
-  useEffect(() => {
-    console.log(proxy);
-  }, [proxy]);
   return (
     <Dialog
       open={open}

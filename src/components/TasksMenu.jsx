@@ -13,10 +13,11 @@ import {
   Container,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useTasks, useProfiles } from '../hooks';
+import { useTasks, useProfiles, useProxies } from '../hooks';
 import InitialState from '../contexts/tasks/InitialState';
 import StoreSelect from './StoreSelect';
 import ProfileSelect from './ProfileSelect';
+import ProxyGroupSelect from './ProxyGroupSelect';
 
 const { logger } = window;
 
@@ -32,6 +33,7 @@ const useStyles = makeStyles({
 export default function TasksMenu() {
   const classes = useStyles();
   const { profiles } = useProfiles();
+  const { proxies } = useProxies();
   const [currentIndex, setCurrentIndex] = useState('');
   const [currentTask, setCurrentTask] = useState({ ...InitialState });
   const {
@@ -78,7 +80,6 @@ export default function TasksMenu() {
     });
   };
   const updateSelectedProfile = (event) => {
-    logger.info('Target received: ', event.target.value);
     const [selectedProfile] = profiles.filter(({ id }) => event.target.value === id);
     logger.info('selected profile: ', selectedProfile);
     setCurrentTask({
@@ -86,6 +87,13 @@ export default function TasksMenu() {
       profile: {
         ...selectedProfile,
       },
+    });
+  };
+  const updateSelectedProxyGroup = (event) => {
+    const [selectedProxyGroup] = proxies.filter(({ id }) => event.target.value === id);
+    setCurrentTask({
+      ...currentTask,
+      ...selectedProxyGroup,
     });
   };
   const handleStart = async () => {
@@ -166,6 +174,10 @@ export default function TasksMenu() {
                 <ProfileSelect
                   value={currentTask.profile.id}
                   onChange={updateSelectedProfile}
+                />
+                <ProxyGroupSelect
+                  value={currentTask.proxyGroup.id}
+                  onChange={updateSelectedProxyGroup}
                 />
               </CardContent>
             </Card>
