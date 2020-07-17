@@ -2,6 +2,7 @@ const chromeLauncher = require('chrome-launcher');
 const puppeteer = require('puppeteer');
 const logger = require('electron-log');
 const request = require('request');
+const useProxy = require('puppeteer-page-proxy');
 const { promisify } = require('util');
 
 /**
@@ -23,7 +24,7 @@ const iframeAttached = (page, nameOrId) => new Promise((resolve) => {
   }, pollingInterval);
 });
 
-// // Checks if we got to the 'Try Again' screen. If yes, wait until the 
+// // Checks if we got to the 'Try Again' screen. If yes, wait until the
 // const checkAndWaitForTryAgain = async (page) => {
 //   await page.waitForSelector('body');
 //   logger.info('Waiting for timer....');
@@ -152,6 +153,54 @@ const placeOrder = async (page) => {
   });
 };
 
+const runCheckoutProcess = async (browser, proxy, info) => {
+  const {
+    billing,
+    shipping,
+    payment,
+    url,
+    size,
+    quantity,
+  } = info;
+  const page = await browser.newPage();
+  const [host, port, user, pass] = proxy.split(':');
+  logger.info(JSON.stringify({
+    host,
+    port,
+    user,
+    pass,
+  }));
+  const proxyUrl = `http://${user}:${pass}@${host}:${port}`;
+  logger.info('Attempting to use: ', proxyUrl);
+  await useProxy(page, proxyUrl);
+  // await page.setViewport({ width: 1280, height: 1200 });
+  await page.setViewport({
+    width: 375,
+    height: 667,
+    isMobile: true,
+  });
+
+  // Load shoe URL directly
+  logger.info(`Loading URL: ${url}`);
+  const response = await page.goto(url, { waitUntil: 'networkidle2' });
+  // const statusCode = response.status();
+  // logger.info(`Status code: ${statusCode}`);
+  // if (statusCode !== 200) {
+  //   throw new Error(`Site is down right now with status code ${statusCode}`);
+  // }
+  // await checkAndWaitForPopUp(page);
+  await selectSize(page, size);
+  await clickAddToCart(page);
+  await selectQuantity(page, quantity);
+  await clickCheckout(page);
+  await fillOutShipping(page, shipping);
+  await fillOutBilling(page, billing);
+  await fillOutPayment(page, payment);
+  await selectFlatRateShipping(page);
+  await agreeToTermsAndConditions(page);
+  await placeOrder(page);
+};
+
 // Open a new window and attempt to checkout
 const startTask = async (task) => {
   const {
@@ -159,6 +208,7 @@ const startTask = async (task) => {
     size,
     quantity,
     profile,
+    proxyGroup,
   } = task;
   const {
     shipping,
@@ -184,24 +234,23 @@ const startTask = async (task) => {
   //   slowMo: 1,
   //   // executablePath: '/Applications/Google\\ Chrome', //getChromiumExecPath(),
   // });
-  const page = await browser.newPage();
-  await page.setViewport({ width: 1280, height: 1200 });
-
-  // Load shoe URL directly
-  logger.info(`Loading URL: ${url}`);
-  await page.goto(url, { waitUntil: 'networkidle2' });
-
-  await checkAndWaitForPopUp(page);
-  await selectSize(page, size);
-  await clickAddToCart(page);
-  await selectQuantity(page, quantity);
-  await clickCheckout(page);
-  await fillOutShipping(page, shipping);
-  await fillOutBilling(page, billing);
-  await fillOutPayment(page, payment);
-  await selectFlatRateShipping(page);
-  await agreeToTermsAndConditions(page);
-  await placeOrder(page);
+  const newLineRegex = /\r?\n/;
+  const proxies = proxyGroup.data.split(newLineRegex);
+  logger.info(`num proxies: ${proxies.length}`);
+  for (let i = 100; i < 127; i += 1) {
+    try {
+      runCheckoutProcess(browser, proxies[i], {
+        url,
+        size,
+        quantity,
+        shipping,
+        billing,
+        payment,
+      });
+    } catch (err) {
+      logger.error(err);
+    }
+  }
 };
 
 module.exports = {
