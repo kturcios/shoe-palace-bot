@@ -1,8 +1,9 @@
 const InitialState = {
   store: '',
+  browserMode: 'desktop',
   url: '',
   size: '',
-  quantity: '',
+  quantity: '1',
   profile: {
     id: '',
   },

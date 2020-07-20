@@ -3,7 +3,6 @@ const Storage = require('node-persist');
 const { v4: uuidv4 } = require('uuid');
 const logger = require('electron-log');
 const { join } = require('path');
-const { order } = require('../utils/shoe-palace-checkout');
 const shoepalace = require('../stores/shoe-palace');
 
 let storage = null;
@@ -21,7 +20,6 @@ const {
   CREATE_TASK,
   UPDATE_TASK,
   DELETE_TASK,
-  EXECUTE_TASK,
   START_TASK,
 } = require('../../src/shared/constants');
 
@@ -77,15 +75,6 @@ ipcMain.handle(DELETE_TASK, async (event, id) => {
   logger.info(`Attempting to delete task ${id}`);
   await storage.removeItem(id);
   logger.info(`Task deleted: ${id}`);
-});
-
-ipcMain.handle(EXECUTE_TASK, async (event, task, billingProfile) => {
-  const checkoutOptions = {
-    ...task,
-    ...billingProfile,
-  };
-  logger.info(`Attempting to checkout order with: ${JSON.stringify(checkoutOptions, null, 2)}`);
-  await order(checkoutOptions);
 });
 
 ipcMain.handle(START_TASK, async (event, task) => {

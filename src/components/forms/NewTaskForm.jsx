@@ -14,6 +14,7 @@ import InitialState from '../../contexts/tasks/InitialState';
 import StoreSelect from '../StoreSelect';
 import ProfileSelect from '../ProfileSelect';
 import ProxyGroupSelect from '../ProxyGroupSelect';
+import BrowserModeSelect from '../BrowserModeSelect';
 
 const { logger } = window;
 
@@ -24,6 +25,7 @@ export default function NewTaskForm({ open, onClose }) {
   const [task, setTask] = useState({ ...InitialState });
   const {
     store,
+    browserMode,
     url,
     size,
     quantity,
@@ -90,6 +92,10 @@ export default function NewTaskForm({ open, onClose }) {
         <StoreSelect
           value={store}
           onChange={updateField('store')}
+        />
+        <BrowserModeSelect
+          value={browserMode}
+          onChange={updateField('browserMode')}
         />
         <TextField
           label="URL"

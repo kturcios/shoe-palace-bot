@@ -153,7 +153,7 @@ const placeOrder = async (page) => {
   });
 };
 
-const runCheckoutProcess = async (browser, proxy, info) => {
+const runCheckoutProcess = async (browser, browserMode, proxy, info) => {
   const {
     billing,
     shipping,
@@ -173,12 +173,27 @@ const runCheckoutProcess = async (browser, proxy, info) => {
   const proxyUrl = `http://${user}:${pass}@${host}:${port}`;
   logger.info('Attempting to use: ', proxyUrl);
   await useProxy(page, proxyUrl);
-  // await page.setViewport({ width: 1280, height: 1200 });
-  await page.setViewport({
-    width: 375,
-    height: 667,
-    isMobile: true,
-  });
+
+  let viewPortSettings = null;
+  switch (browserMode) {
+    case 'desktop':
+      viewPortSettings = {
+        width: 1280,
+        height: 1200,
+        isMobile: false,
+      };
+      break;
+    case 'mobile':
+      viewPortSettings = {
+        width: 375,
+        height: 667,
+        isMobile: true,
+      };
+      break;
+    default:
+      throw new Error('Unrecognized browser mode');
+  }
+  await page.setViewport(viewPortSettings);
 
   // Load shoe URL directly
   logger.info(`Loading URL: ${url}`);
@@ -204,6 +219,7 @@ const runCheckoutProcess = async (browser, proxy, info) => {
 // Open a new window and attempt to checkout
 const startTask = async (task) => {
   const {
+    browserMode,
     url,
     size,
     quantity,
