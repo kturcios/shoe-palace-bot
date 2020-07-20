@@ -2,7 +2,7 @@
   "name": "hands.io",
   "productName": "Hands.IO",
   "main": "electron/main.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "./",
   "private": true,
   "dependencies": {
