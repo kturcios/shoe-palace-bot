@@ -174,7 +174,7 @@ export default function App() {
             onClick={() => setSelectedMenuIndex(1)}
           >
             <ListItemIcon>
-              <FormatListBulletedIcon />
+              <LanguageIcon />
             </ListItemIcon>
             <ListItemText primary="Proxies" />
             <IconButton
@@ -189,7 +189,7 @@ export default function App() {
             onClick={() => setSelectedMenuIndex(2)}
           >
             <ListItemIcon>
-              <LanguageIcon />
+              <FormatListBulletedIcon />
             </ListItemIcon>
             <ListItemText primary="Tasks" />
             <IconButton
