@@ -163,16 +163,18 @@ const runCheckoutProcess = async (browser, browserMode, proxy, info) => {
     quantity,
   } = info;
   const page = await browser.newPage();
-  const [host, port, user, pass] = proxy.split(':');
-  logger.info(JSON.stringify({
-    host,
-    port,
-    user,
-    pass,
-  }));
-  const proxyUrl = `http://${user}:${pass}@${host}:${port}`;
-  logger.info('Attempting to use: ', proxyUrl);
-  await useProxy(page, proxyUrl);
+  if (proxy !== null) {
+    const [host, port, user, pass] = proxy.split(':');
+    logger.info(JSON.stringify({
+      host,
+      port,
+      user,
+      pass,
+    }));
+    const proxyUrl = `http://${user}:${pass}@${host}:${port}`;
+    logger.info('Attempting to use: ', proxyUrl);
+    await useProxy(page, proxyUrl);
+  }
 
   let viewPortSettings = null;
   switch (browserMode) {
@@ -251,21 +253,32 @@ const startTask = async (task) => {
   //   // executablePath: '/Applications/Google\\ Chrome', //getChromiumExecPath(),
   // });
   const newLineRegex = /\r?\n/;
-  const proxies = proxyGroup.data.split(newLineRegex);
-  logger.info(`num proxies: ${proxies.length}`);
-  for (let i = 100; i < 127; i += 1) {
-    try {
-      runCheckoutProcess(browser, proxies[i], {
-        url,
-        size,
-        quantity,
-        shipping,
-        billing,
-        payment,
-      });
-    } catch (err) {
-      logger.error(err);
+  if (proxyGroup.data !== undefined) {
+    const proxies = proxyGroup.data.split(newLineRegex);
+    logger.info(`num proxies: ${proxies.length}`);
+    for (let i = 100; i < 127; i += 1) {
+      try {
+        runCheckoutProcess(browser, browserMode, proxies[i], {
+          url,
+          size,
+          quantity,
+          shipping,
+          billing,
+          payment,
+        });
+      } catch (err) {
+        logger.error(err);
+      }
     }
+  } else {
+    runCheckoutProcess(browser, browserMode, null, {
+      url,
+      size,
+      quantity,
+      shipping,
+      billing,
+      payment,
+    });
   }
 };
 
