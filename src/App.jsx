@@ -21,12 +21,12 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import LanguageIcon from '@material-ui/icons/Language';
-import ProfilesMenu from './components/ProfilesMenu';
-import TasksMenu from './components/TasksMenu';
-import ProxiesMenu from './components/ProxiesMenu';
-import NewProfileForm from './components/NewProfileForm';
-import NewTaskForm from './components/NewTaskForm';
-import NewProxyForm from './components/NewProxyForm';
+import ProfilesMenu from './components/menus/ProfilesMenu';
+import TasksMenu from './components/menus/TasksMenu';
+import ProxiesMenu from './components/menus/ProxiesMenu';
+import NewProfileForm from './components/forms/NewProfileForm';
+import NewTaskForm from './components/forms/NewTaskForm';
+import NewProxyForm from './components/forms/NewProxyForm';
 
 const drawerWidth = 260;
 
@@ -109,8 +109,8 @@ export default function App() {
   const [open, setOpen] = useState(true);
   const menus = [
     <ProfilesMenu />,
-    <TasksMenu />,
     <ProxiesMenu />,
+    <TasksMenu />,
   ];
 
   const handleDrawerOpen = () => {
@@ -176,9 +176,9 @@ export default function App() {
             <ListItemIcon>
               <FormatListBulletedIcon />
             </ListItemIcon>
-            <ListItemText primary="Tasks" />
+            <ListItemText primary="Proxies" />
             <IconButton
-              onClick={() => setTaskFormOpen(true)}
+              onClick={() => setProxyFormOpen(true)}
             >
               <AddCircleIcon />
             </IconButton>
@@ -191,9 +191,9 @@ export default function App() {
             <ListItemIcon>
               <LanguageIcon />
             </ListItemIcon>
-            <ListItemText primary="Proxies" />
+            <ListItemText primary="Tasks" />
             <IconButton
-              onClick={() => setProxyFormOpen(true)}
+              onClick={() => setTaskFormOpen(true)}
             >
               <AddCircleIcon />
             </IconButton>

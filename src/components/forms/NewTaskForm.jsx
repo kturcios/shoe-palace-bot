@@ -9,11 +9,11 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import { useTasks, useProfiles, useProxies } from '../hooks';
-import InitialState from '../contexts/tasks/InitialState';
-import StoreSelect from './StoreSelect';
-import ProfileSelect from './ProfileSelect';
-import ProxyGroupSelect from './ProxyGroupSelect';
+import { useTasks, useProfiles, useProxies } from '../../hooks';
+import InitialState from '../../contexts/tasks/InitialState';
+import StoreSelect from '../StoreSelect';
+import ProfileSelect from '../ProfileSelect';
+import ProxyGroupSelect from '../ProxyGroupSelect';
 
 const { logger } = window;
 

@@ -13,12 +13,12 @@ import {
   Container,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useProfiles } from '../hooks';
-import InitialState from '../contexts/profiles/InitialState';
-import StateSelect from './StateSelect';
-import CountrySelect from './CountrySelect';
-import CreditCardTypeSelect from './CreditCardTypeSelect';
-import MonthSelect from './MonthSelect';
+import { useProfiles } from '../../hooks';
+import InitialState from '../../contexts/profiles/InitialState';
+import StateSelect from '../StateSelect';
+import CountrySelect from '../CountrySelect';
+import CreditCardTypeSelect from '../CreditCardTypeSelect';
+import MonthSelect from '../MonthSelect';
 
 const useStyles = makeStyles({
   root: {

@@ -11,8 +11,8 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
-import InitialState from '../contexts/proxies/InitialState';
-import { useProxies } from '../hooks';
+import InitialState from '../../contexts/proxies/InitialState';
+import { useProxies } from '../../hooks';
 
 const { logger } = window;
 

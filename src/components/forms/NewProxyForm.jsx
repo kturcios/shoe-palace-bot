@@ -9,8 +9,8 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import { useProxies } from '../hooks';
-import InitialState from '../contexts/proxies/InitialState';
+import { useProxies } from '../../hooks';
+import InitialState from '../../contexts/proxies/InitialState';
 
 const { logger } = window;
 

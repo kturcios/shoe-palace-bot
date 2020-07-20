@@ -10,12 +10,12 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import MonthSelect from './MonthSelect';
-import StateSelect from './StateSelect';
-import CountrySelect from './CountrySelect';
-import CreditCardTypeSelect from './CreditCardTypeSelect';
-import { useProfiles } from '../hooks';
-import InitialState from '../contexts/profiles/InitialState';
+import MonthSelect from '../MonthSelect';
+import StateSelect from '../StateSelect';
+import CountrySelect from '../CountrySelect';
+import CreditCardTypeSelect from '../CreditCardTypeSelect';
+import { useProfiles } from '../../hooks';
+import InitialState from '../../contexts/profiles/InitialState';
 
 const { logger } = window;
 
